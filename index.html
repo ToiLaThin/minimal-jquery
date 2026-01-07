@@ -7,10 +7,21 @@
 </head>
 <body>
     <input id="toSelect">
-    <script src="core.js"></script>
-    <script>
+    <input id="toSelect2">
+    <script src="core.js" type="module"></script>
+    <script type="module">
+        import { jQuery } from "./core.js"
         let x = jQuery("#toSelect");
         console.log(x);
+        let y = {};
+        let z = { isSomething: true };
+        jQuery.shallowExtend(y, z);
+        console.log(y);
+        debugger; 
+        jQuery("input").each(function(index, item) {
+            console.log(index);
+            console.log(item);
+        }) 
     </script>
 </body>
 </html>
