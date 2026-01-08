@@ -8,20 +8,31 @@
 <body>
     <input id="toSelect">
     <input id="toSelect2">
+    <div class="myDiv"></div>
     <script src="core.js" type="module"></script>
     <script type="module">
         import { jQuery } from "./core.js"
+        jQuery(document).ready(function() {
+            console.log("document ready!!");
+        });
         let x = jQuery("#toSelect");
         console.log(x);
         let y = {};
         let z = { isSomething: true };
         jQuery.shallowExtend(y, z);
         console.log(y);
-        debugger; 
         jQuery("input").each(function(index, item) {
             console.log(index);
             console.log(item);
         }) 
+
+        jQuery("input")
+            .on("click", (event) => {
+                console.log(event);
+            })
+            .val("Just a value");
+        jQuery(".myDiv").text("Hello world");
+
     </script>
 </body>
 </html>
