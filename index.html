@@ -30,9 +30,14 @@
             .on("click", (event) => {
                 console.log(event);
             })
-            .val("Just a value");
+            .val("Just a value")
+            .css({"color": "yellow", "display": "block"})
+            .toggleClass("myInput");
         jQuery(".myDiv").text("Hello world");
-
+        console.log(jQuery("input").css("color"));
+        console.log(jQuery("input").css());
+        console.log(jQuery("input").hasClass("myInput"));
+        
     </script>
 </body>
 </html>

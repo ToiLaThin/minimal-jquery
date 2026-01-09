@@ -56,7 +56,7 @@ jQueryObject.prototype = jQuery.fn = jQuery.prototype = { //alias to prototype
                 element.textContent = text;
             })
         }
-        else if (arguments.length == 0 || !arguments) {
+        else if (!arguments || arguments?.length == 0) {
             return jQueryObj[0].textContent;
         }
     },
@@ -69,9 +69,72 @@ jQueryObject.prototype = jQuery.fn = jQuery.prototype = { //alias to prototype
                 element.value = value;
             })
         }
-        else if (arguments.length == 0 || !arguments) {
+        else if (!arguments || arguments?.length == 0) {
             return jQueryObj[0].value;
         }
+    },
+    css: function() {
+        let cssCamelcaseProperty = function(cssProperty) {
+            return cssProperty.replace(/-([a-z])/g, (fullMatch, captureCharacter) => {
+                return captureCharacter.toUpperCase();
+            });
+        };
+        const jQueryObj = this;
+        if (arguments.length == 2) {
+            let cssPropertyName = arguments[0];
+            let value = arguments[1];
+            return jQuery.each(jQueryObj, function() {
+                const element = this;
+                const camelProperty = cssCamelcaseProperty(cssPropertyName);
+                element.style[camelProperty] = value;
+            });
+        }
+        else if (arguments.length == 1 && typeof arguments[0] == 'object')  {
+            const cssProperties = arguments[0];
+            return jQuery.each(jQueryObj, function() {
+                const element = this;
+                for (const [cssPropertyName, value] of Object.entries(cssProperties)) {
+                    const camelProperty = cssCamelcaseProperty(cssPropertyName);
+                    element.style[camelProperty] = value;
+                }
+            });
+        }
+        else if (arguments.length == 1 && typeof arguments[0] == 'string')  {
+            const cssPropertyName = arguments[0];
+            const camelProperty = cssCamelcaseProperty(cssPropertyName);
+            let result = getComputedStyle(jQueryObj[0])[camelProperty];
+            return jQueryObj[0].style[camelProperty];
+        }
+        else if (!arguments || arguments?.length == 0) {
+            let result = jQueryObj[0].style;
+            return result;
+        }
+    },
+    hasClass: function(className) {
+        const jQueryObj = this;
+        const result = Array.prototype.some.call(jQueryObj, (element) => element.classList.contains(className));
+        return result;
+    },
+    addClass: function(className) {
+        const jQueryObj = this;
+        return jQuery.each(jQueryObj, function() {
+            const element = this;
+            element.classList.add(className);
+        });
+    },
+    removeClass: function(className) {
+        const jQueryObj = this;
+        return jQuery.each(jQueryObj, function() {
+            const element = this;
+            element.classList.remove(className);
+        });
+    },
+    toggleClass: function(className) {
+        const jQueryObj = this;
+        return jQuery.each(jQueryObj, function() {
+            const element = this;
+            element.classList.toggle(className);
+        });
     }
 }
 jQuery.shallowExtend = shallowExtend;
