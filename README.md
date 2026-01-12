@@ -9,3 +9,10 @@ Just include this package link as a script tag, this should be delivered via *js
 - add .npmignore to prevent node_modules being push to npm
 - change package name in package.json including username, also mind the version
 - use ```npm pushblish --access public``` to publish
+
+
+## New features in version 2.0.0
+- widget factory to standardize ways to create widget and setup life cycle
+- widget inheritance and extense
+- friendly interface via widget bridge
+- set arbitrary data associated with element via Data

@@ -10,8 +10,8 @@
     <input id="toSelect2">
     <div class="myDiv"></div>
     <!-- <script src="./src/core.js" type="module"></script> -->
-     <!-- <script src="./dist/main.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/@peter-debugging-2/peter-minimal-jquery@1.0.0/dist/main.js"></script>
+     <script src="./dist/main.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@peter-debugging-2/peter-minimal-jquery@1.0.0/dist/main.js"></script> -->
     <!-- <script type="module"> -->
      <script>
         jQuery(document).ready(function() {
@@ -34,12 +34,21 @@
             })
             .val("Just a value")
             .css({"color": "yellow", "display": "block"})
-            .toggleClass("myInput");
+            .toggleClass("myInput")
+            .data("peterData", {"hello": "world", "me": 1});
         jQuery(".myDiv").text("Hello world");
+        console.log(jQuery("input").data());
         console.log(jQuery("input").css("color"));
         console.log(jQuery("input").css());
         console.log(jQuery("input").hasClass("myInput"));
-        
+
+        jQuery.widget("custom.simpleWidget", { 
+            _create: function() { 
+                console.log("This is me"); 
+            }
+        });
+        jQuery("input").simpleWidget();
+        jQuery("input").simpleWidget({"me": 2});
     </script>
 </body>
 </html>
