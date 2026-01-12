@@ -16,3 +16,9 @@ Just include this package link as a script tag, this should be delivered via *js
 - widget inheritance and extense
 - friendly interface via widget bridge
 - set arbitrary data associated with element via Data
+
+# *How to use*
+Unminified version:
+```Include a script tag like: <script src="https://cdn.jsdelivr.net/npm/@peter-debugging-2/peter-minimal-jquery@<version>/dist/main.js"></script>```
+Minified version:
+```Include a script tag like: <script src="https://cdn.jsdelivr.net/npm/@peter-debugging-2/peter-minimal-jquery@<version>/dist/main.min.js"></script>```
