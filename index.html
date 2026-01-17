@@ -6,12 +6,13 @@
     <title>Document</title>
 </head>
 <body>
+    <p id="peterRed" style="color: red;">Peter</p>
     <input id="toSelect">
     <input id="toSelect2">
     <div class="myDiv"></div>
-    <!-- <script src="./src/core.js" type="module"></script> -->
-     <!-- <script src="./dist/main.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/@peter-debugging-2/peter-minimal-jquery@2.0.0/dist/main.js"></script>
+    <!-- <script src="./src/index.js" type="module"></script> -->
+     <script src="./dist/main.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@peter-debugging-2/peter-minimal-jquery@2.0.0/dist/main.js"></script> -->
     <!-- <script type="module"> -->
      <script>
         jQuery(document).ready(function() {
@@ -49,6 +50,8 @@
         });
         jQuery("input").simpleWidget();
         jQuery("input").simpleWidget({"me": 2});
+
+        jQuery("#peterRed").position({ of: $(".myDiv"), at: ["right", "bottom"], my: ["right", "bottom"] });
     </script>
 </body>
 </html>

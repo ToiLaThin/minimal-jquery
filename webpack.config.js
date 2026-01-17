@@ -8,7 +8,7 @@ export default (env, argv) => {
     const isProduction = argv.mode == 'production';
 
     return {
-        entry: './src/core.js',
+        entry: './src/index.js',
         mode: isProduction ? "production" : "development",
         devtool: "source-map",
         optimization: {
