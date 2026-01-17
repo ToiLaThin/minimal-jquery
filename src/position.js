@@ -84,6 +84,46 @@ import { jQuery } from './core.js';
         return outerHeight(jQueryObj[0])
     }
 
+    /** Get the offset compared to parent element */
+    function offsetToParent(target) {
+        target = $(target);
+        const element = target[0];
+        const position = target.css("position");
+        let offset;
+        let offsetParent = { top: 0, left: 0 };
+        if (position == "fixed") {
+            offset = element.getBoundingClientRect();
+            return {
+                //this case should compare to viewport only
+                top: offset.top - target.css("marginTop"),
+                left: offset.left - target.css("marginLeft")
+            }
+        }
+        else {
+            offset = target.offset();
+
+            const docElement = element.ownerDocument.documentElement;
+            let offsetParentElement = element.offsetParent || docElement;
+            let offsetParentElementPosition = $(offsetParent).css("position");
+            while (offsetParentElement && offsetParentElement !== docElement && offsetParentPosition == "static") {
+                offsetParentElement = offsetParentElement.offsetParent || docElement;
+                offsetParentElementPosition = $(offsetParentElement).css("position");
+            }
+
+            //just normalize top & left of parent element
+            if (offsetParentElement !== element && offsetParentElement.nodeType == 1 && offsetParentElementPosition != "static") {
+                $parent = $(offsetParentElement);
+                offsetParent = $parent.offset();
+                offsetParent.top += parseFloat($parent.css("borderTopWidth"));
+                offsetParent.left += parseFloat($parent.css("borderLeftWidth"));
+            }
+            return {
+                top: offset.top - offsetParent.top - parseFloat(target.css("marginTop")),
+                left: offset.left - offsetParent.left - parseFloat(target.css("marginLeft"))
+            }
+        }
+    }
+    /** Convert the position relative to viewport (getBoundingClientRect) to position relative to document (+ pageYOffset & pageXOffset) */
     $.fn.offset = function(options) {
         const jQueryObj = this;
         const element = jQueryObj[0];
@@ -93,18 +133,27 @@ import { jQuery } from './core.js';
             top: rect.top + window.pageYOffset,
             left: rect.left + window.pageXOffset
         };
-        if (!arguments.length)
-            return elementOffset;
+        if (!arguments.length) return elementOffset; //getter, below is setter
+        const position = jQueryObj.css("position");
+        if (position == "static")
+            element.style.position = "relative"; //ensure top and left is not ignored
 
-        const cssTop = parseFloat(jQueryObj.css("top"));
-        const cssLeft = parseFloat(jQueryObj.css("left"));
+        let cssTop = jQueryObj.css("top");
+        let cssLeft = jQueryObj.css("left");
+        if (["absolute", "fixed"].includes(position) || (cssTop + cssLeft).indexOf("auto") > -1) {
+            const { top: cssTop, left: cssLeft } = offsetToParent(element);
+        }
+        else {
+            cssTop = parseFloat(cssTop);
+            cssLeft = parseFloat(cssLeft);
+        }
         const props = {
-            top: options.top - elementOffset.top + cssTop, //options.top - elementOffset.top (how much to move top). then convert to css value by adding cssTop
-            left: options.left - elementOffset.left + cssLeft
+            //options.top - elementOffset.top (how much to move top). then convert to css value by adding cssTop
+            //should have px, otherwise wont works
+            top: `${options.top - elementOffset.top + cssTop}px`, 
+            left: `${options.left - elementOffset.left + cssLeft}px`
         };
         jQueryObj.css(props);
-
-
     }
 
     function getDimensions(target) {
@@ -120,7 +169,7 @@ import { jQuery } from './core.js';
             return {
                 width: target.width(),
                 height: target.height(),
-                offset: { top: element.scrollTop(), left: element.scrollLeft() }
+                offset: { top: element.scrollTop(), left: element.scrollLeft() } //TODO: not having these functions scrollTop, scrollLeft
             }
         if (element.preventDefault) {
             return {
@@ -144,7 +193,7 @@ import { jQuery } from './core.js';
         const { width: targetWidth, height: targetHeight, offset: targetOffset } = getDimensions(target);
         /** The position compared to the target */
         let basePosition = deepExtend({}, targetOffset);
-
+        options.at = options.at || {};
         if (options.at[0] === "right")
             basePosition.left += targetWidth;
         else if (options.at[0] === "center" )
@@ -159,6 +208,7 @@ import { jQuery } from './core.js';
         return jQueryObj.each(function() {
             const element = $(this), elementWidth = element.outerWidth(), elementHeight = element.outerHeight();
             let position = deepExtend({}, basePosition);
+            options.my = options.my || {};
             if (options.my[0] === "right")
                 position.left -= elementWidth;
             else if (options.my[0] === "center")
@@ -169,9 +219,7 @@ import { jQuery } from './core.js';
             else if (options.my[1] === "center")
                 position.top -= elementHeight / 2;
 
-
-            debugger;
-            element.offset(position);
+            element.offset(position); //setter
         });
     }
 

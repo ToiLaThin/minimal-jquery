@@ -110,7 +110,7 @@ jQueryObject.prototype = jQuery.fn = jQuery.prototype = { //alias to prototype
             const cssPropertyName = arguments[0];
             const camelProperty = cssCamelcaseProperty(cssPropertyName);
             let result = getComputedStyle(jQueryObj[0])[camelProperty];
-            return jQueryObj[0].style[camelProperty];
+            return result ?? jQueryObj[0].style[camelProperty];
         }
         else if (!arguments || arguments?.length == 0) {
             let result = jQueryObj[0].style;

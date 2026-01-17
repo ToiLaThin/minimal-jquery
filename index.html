@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <p id="peterRed" style="color: red;">Peter</p>
+    <p id="peterRed" style="color: red; position: relative">Peter</p>
     <input id="toSelect">
     <input id="toSelect2">
     <div class="myDiv"></div>
@@ -51,7 +51,7 @@
         jQuery("input").simpleWidget();
         jQuery("input").simpleWidget({"me": 2});
 
-        jQuery("#peterRed").position({ of: $(".myDiv"), at: ["right", "bottom"], my: ["right", "bottom"] });
+        jQuery("#peterRed").position({ of: $(".myDiv"), at: ["right", "bottom"], my: ["center", "bottom"] });
     </script>
 </body>
 </html>
